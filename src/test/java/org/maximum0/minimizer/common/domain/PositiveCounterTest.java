@@ -30,7 +30,7 @@ class PositiveCounterTest {
         assertEquals(validValue, counter.getValue());
     }
 
-    @DisplayName("음수 값으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("음수 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @ParameterizedTest(name = "음수 값: {0}")
     @ValueSource(longs = {-1L, -100L, -999L})
     void givenNegativeValue_whenCreated_thenThrowIllegalArgumentException(long invalidValue) {
@@ -38,7 +38,7 @@ class PositiveCounterTest {
         assertThrows(IllegalArgumentException.class, () -> new PositiveCounter(invalidValue));
     }
 
-    @DisplayName("PositiveCounter 생성 후, increase() 호출 시, 값이 1 증가한다.")
+    @DisplayName("PositiveCounter 생성 후, increase() 호출 시, 값이 1 증가합니다.")
     @Test
     void givenCreatedWithValue_whenIncreaseIsCalled_thenValueIncrementsByOne() {
         // given
@@ -51,7 +51,7 @@ class PositiveCounterTest {
         assertEquals(6L, counter.getValue());
     }
 
-    @DisplayName("0보다 큰 값으로 생성 후, decrease()를 호출하면, 값이 1 감소한다.")
+    @DisplayName("0보다 큰 값으로 생성 후, decrease()를 호출하면, 값이 1 감소합니다.")
     @Test
     void givenCreatedWithValueGreaterThanZero_whenDecreaseIsCalled_thenValueDecrementsByOne() {
         // given

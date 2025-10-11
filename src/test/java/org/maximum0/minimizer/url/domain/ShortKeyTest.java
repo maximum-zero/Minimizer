@@ -23,7 +23,7 @@ class ShortKeyTest {
         assertEquals(validKey, shortKey.getValue());
     }
 
-    @DisplayName("빈 값으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("빈 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @ParameterizedTest(name = "입력 값: {0}")
     @NullAndEmptySource
     void givenEmptyKey_whenCreated_thenThrowIllegalArgumentException(String invalidKey) {
@@ -31,7 +31,7 @@ class ShortKeyTest {
         assertThrows(IllegalArgumentException.class, () -> new ShortKey(invalidKey));
     }
 
-    @DisplayName("6자가 아니거나 유효하지 않은 문자를 포함 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("6자가 아니거나 유효하지 않은 문자를 포함 시, IllegalArgumentException 예외가 발생합니다.")
     @ParameterizedTest(name = "입력 값: {0}")
     @ValueSource(strings = {
             "abc",      // 6자 미만

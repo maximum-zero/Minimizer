@@ -43,7 +43,7 @@ class UrlMappingTest {
         assertEquals(expectedClickCount, mapping.getClickCount());
     }
 
-    @DisplayName("유효하지 않은 ShortKey 값으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("유효하지 않은 ShortKey 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @Test
     void givenInvalidShortKey_whenCreated_thenThrowIllegalArgumentException() {
         // given
@@ -53,7 +53,7 @@ class UrlMappingTest {
         assertThrows(IllegalArgumentException.class, () -> new UrlMapping(ID, invalidShortKey, ORIGINAL_URL, EXPIRES_AT));
     }
 
-    @DisplayName("유효하지 않은 OriginalUrl 값으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("유효하지 않은 OriginalUrl 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @Test
     void givenInvalidOriginalUrl_whenCreated_thenThrowIllegalArgumentException() {
         // given
@@ -63,7 +63,7 @@ class UrlMappingTest {
         assertThrows(IllegalArgumentException.class, () -> new UrlMapping(ID, SHORT_KEY, invalidUrl, EXPIRES_AT));
     }
 
-    @DisplayName("Url 매핑 생성 후, increaseClickCount() 호출 시, 클릭 횟수가 1 증가한다.")
+    @DisplayName("Url 매핑 생성 후, increaseClickCount() 호출 시, 클릭 횟수가 1 증가합니다.")
     @Test
     void givenUrlMapping_whenIncreaseClickCountIsCalled_thenCountIncreases() {
         // given

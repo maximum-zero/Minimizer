@@ -25,7 +25,7 @@ class UrlTest {
         assertEquals(validUrl, url.getValue());
     }
 
-    @DisplayName("빈 값으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("빈 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @ParameterizedTest(name = "입력 값: {0}")
     @NullAndEmptySource
     void givenEmptyValue_whenCreated_thenThrowIllegalArgumentException(String emptyValue) {
@@ -33,7 +33,7 @@ class UrlTest {
         assertThrows(IllegalArgumentException.class, () -> new Url(emptyValue));
     }
 
-    @DisplayName("유효하지 않은 URL 형식으로 생성 시, IllegalArgumentException 예외가 발생한다.")
+    @DisplayName("유효하지 않은 URL 형식으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @ParameterizedTest(name = "유효하지 않은 URL: {0}")
     @ValueSource(strings = {
         "invalidUrl", // 스키마 없음
