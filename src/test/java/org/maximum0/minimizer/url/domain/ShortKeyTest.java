@@ -16,7 +16,7 @@ class ShortKeyTest {
     @ValueSource(strings = {"abc12D", "AbCdEF", "123456"})
     void givenValidKey_whenCreated_thenIsCreatedAndReturnSixLengthValue(String validKey) {
         // when
-        ShortKey shortKey = new ShortKey(validKey);
+        ShortKey shortKey = ShortKey.createShortKey(validKey);
 
         // then
         assertEquals(KEY_LENGTH, shortKey.getValue().length());
@@ -28,7 +28,7 @@ class ShortKeyTest {
     @NullAndEmptySource
     void givenEmptyKey_whenCreated_thenThrowIllegalArgumentException(String invalidKey) {
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new ShortKey(invalidKey));
+        assertThrows(IllegalArgumentException.class, () -> ShortKey.createShortKey(invalidKey));
     }
 
     @DisplayName("6자가 아니거나 유효하지 않은 문자를 포함 시, IllegalArgumentException 예외가 발생합니다.")
@@ -41,7 +41,7 @@ class ShortKeyTest {
     })
     void givenInvalidLengthOrCharacters_whenCreated_thenThrowIllegalArgumentException(String invalidKey) {
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new ShortKey(invalidKey));
+        assertThrows(IllegalArgumentException.class, () -> ShortKey.createShortKey(invalidKey));
     }
 
 }

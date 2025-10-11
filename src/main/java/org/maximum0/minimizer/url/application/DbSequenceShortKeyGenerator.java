@@ -14,7 +14,7 @@ public class DbSequenceShortKeyGenerator implements ShortKeyGenerator {
     public ShortKey generate() {
         long uniqueId = sequenceRepository.getNextId();
         String encode = Base62Encoder.encode(uniqueId);
-        return new ShortKey(encode);
+        return ShortKey.createShortKey(encode);
     }
 
 }
