@@ -18,7 +18,7 @@ class UrlTest {
     })
     void givenValidValue_whenCreated_thenIsCreatedAndReturnValue(String validUrl) {
         // when
-        Url url = new Url(validUrl);
+        Url url = Url.createUrl(validUrl);
 
         // then
         assertNotNull(url);
@@ -30,7 +30,7 @@ class UrlTest {
     @NullAndEmptySource
     void givenEmptyValue_whenCreated_thenThrowIllegalArgumentException(String emptyValue) {
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new Url(emptyValue));
+        assertThrows(IllegalArgumentException.class, () -> Url.createUrl(emptyValue));
     }
 
     @DisplayName("유효하지 않은 URL 형식으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
@@ -42,6 +42,6 @@ class UrlTest {
     })
     void givenInvalidValue_whenCreated_thenThrowIllegalArgumentException(String invalidValue) {
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new Url(invalidValue));
+        assertThrows(IllegalArgumentException.class, () -> Url.createUrl(invalidValue));
     }
 }

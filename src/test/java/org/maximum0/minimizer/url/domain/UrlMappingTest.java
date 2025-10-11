@@ -8,22 +8,21 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("UrlMapping 도메인")
 class UrlMappingTest {
-    private final Long ID = 1L;
     private final String SHORT_KEY = "abc12D";
     private final String ORIGINAL_URL = "https://www.google.com";
     private final Instant EXPIRES_AT = Instant.now().plusSeconds(3600);
 
-    // --- 1. 성공적인 생성 테스트 ---
-
     @DisplayName("클릭 횟수를 제외한 유효한 URL 매핑 생성 시, 클릭 횟수는 0으로 초기화된다.")
     @Test
     void givenValidMappingUrl_whenCreatedWithNoClickCount_thenReturnClickCountIsZero() {
+        // given
+        ShortKey shortKey = ShortKey.createShortKey(SHORT_KEY);
+
         // when
-        UrlMapping mapping = new UrlMapping(ID, SHORT_KEY, ORIGINAL_URL, EXPIRES_AT);
+        UrlMapping mapping = UrlMapping.createUrlMapping(shortKey, ORIGINAL_URL, EXPIRES_AT);
 
         // then
         assertNotNull(mapping);
-        assertEquals(ID, mapping.getId());
         assertEquals(SHORT_KEY, mapping.getShortKey());
         assertEquals(ORIGINAL_URL, mapping.getOriginalUrl());
         assertEquals(0L, mapping.getClickCount());
@@ -33,10 +32,11 @@ class UrlMappingTest {
     @Test
     void givenValidDataForExistingMapping_whenConstructorIsCalled_thenClickCountMatchesInput() {
         // given
+        Long ID = 1L;
         Long expectedClickCount = 42L;
 
         // when
-        UrlMapping mapping = new UrlMapping(ID, SHORT_KEY, ORIGINAL_URL, EXPIRES_AT, expectedClickCount);
+        UrlMapping mapping = UrlMapping.createUrlMapping(ID, SHORT_KEY, ORIGINAL_URL, EXPIRES_AT, expectedClickCount);
 
         // then
         assertNotNull(mapping);
@@ -50,24 +50,26 @@ class UrlMappingTest {
         String invalidShortKey = "key1"; // 6자 미만
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new UrlMapping(ID, invalidShortKey, ORIGINAL_URL, EXPIRES_AT));
+        assertThrows(IllegalArgumentException.class, () -> UrlMapping.createUrlMapping(ShortKey.createShortKey(invalidShortKey), ORIGINAL_URL, EXPIRES_AT));
     }
 
     @DisplayName("유효하지 않은 OriginalUrl 값으로 생성 시, IllegalArgumentException 예외가 발생합니다.")
     @Test
     void givenInvalidOriginalUrl_whenCreated_thenThrowIllegalArgumentException() {
         // given
+        ShortKey shortKey = ShortKey.createShortKey(SHORT_KEY);
         String invalidUrl = "ftp://www.naver.com"; // Url 규칙 위반
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> new UrlMapping(ID, SHORT_KEY, invalidUrl, EXPIRES_AT));
+        assertThrows(IllegalArgumentException.class, () -> UrlMapping.createUrlMapping(shortKey, invalidUrl, EXPIRES_AT));
     }
 
     @DisplayName("Url 매핑 생성 후, increaseClickCount() 호출 시, 클릭 횟수가 1 증가합니다.")
     @Test
     void givenUrlMapping_whenIncreaseClickCountIsCalled_thenCountIncreases() {
         // given
-        UrlMapping mapping = new UrlMapping(ID, SHORT_KEY, ORIGINAL_URL, EXPIRES_AT);
+        ShortKey shortKey = ShortKey.createShortKey(SHORT_KEY);
+        UrlMapping mapping = UrlMapping.createUrlMapping(shortKey, ORIGINAL_URL, EXPIRES_AT);
 
         // when
         mapping.increaseClickCount();

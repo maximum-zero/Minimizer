@@ -16,7 +16,11 @@ public class ShortKey {
 
     private final String value;
 
-    public ShortKey(String value) {
+    public static ShortKey createShortKey(String value) {
+        return new ShortKey(value);
+    }
+
+    private ShortKey(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("단축 URL 키는 비어있을 수 없습니다.");
         }

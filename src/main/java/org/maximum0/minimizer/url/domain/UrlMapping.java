@@ -7,24 +7,28 @@ import org.maximum0.minimizer.common.domain.PositiveCounter;
 public class UrlMapping {
     @Getter
     private final Long id;
-    private ShortKey shortKey;
-    private Url originalUrl;
-    private PositiveCounter clickCount;
+    private final ShortKey shortKey;
+    private final Url originalUrl;
+    private final PositiveCounter clickCount;
     private final Instant expiresAt;
 
-    public UrlMapping(Long id, String shortKey, String originalUrl, Instant expiresAt) {
-        this.id = id;
-        this.shortKey = new ShortKey(shortKey);
-        this.originalUrl = new Url(originalUrl);
-        this.clickCount = new PositiveCounter();
-        this.expiresAt = expiresAt;
+    public static UrlMapping createUrlMapping(ShortKey shortKey, String originalUrl, Instant expiresAt) {
+        return new UrlMapping(null, shortKey, originalUrl, expiresAt, 0L);
     }
 
-    public UrlMapping(Long id, String shortKey, String originalUrl, Instant expiresAt, Long clickCount) {
+    public static UrlMapping createUrlMapping(Long id, String shortKey, String originalUrl, Instant expiresAt, Long clickCount) {
+        return new UrlMapping(id, ShortKey.createShortKey(shortKey), originalUrl, expiresAt, clickCount);
+    }
+
+    private UrlMapping(Long id, ShortKey shortKey, String originalUrl, Instant expiresAt, Long clickCount) {
         this.id = id;
-        this.shortKey = new ShortKey(shortKey);
-        this.originalUrl = new Url(originalUrl);
+        this.shortKey = shortKey;
+        this.originalUrl = Url.createUrl(originalUrl);
         this.expiresAt = expiresAt;
+
+        if (clickCount == null) {
+            clickCount = 0L;
+        }
         this.clickCount = new PositiveCounter(clickCount);
     }
 

@@ -18,7 +18,11 @@ public class Url {
 
     private final String value;
 
-    public Url(String value) {
+    public static Url createUrl(String value) {
+        return new Url(value);
+    }
+
+    private Url(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("URL은 비어있을 수 없습니다.");
         }
