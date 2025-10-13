@@ -3,7 +3,9 @@ package org.maximum0.minimizer.url.application.ports;
 import java.util.Optional;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UrlMappingRepository {
     /**
      * UrlMapping을 생성 및 변경합니다.

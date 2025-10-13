@@ -10,6 +10,7 @@ import org.maximum0.minimizer.testing.FakeObjectFactory;
 import org.maximum0.minimizer.url.application.ports.UrlMappingRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
+import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
 
 @DisplayName("Url 서비스 로직")
 class UrlServiceTest {
@@ -55,14 +56,14 @@ class UrlServiceTest {
         assertEquals(2L, urlMapping2.getClickCount());
     }
 
-    @DisplayName("존재하지 않는 URL 조회 시, IllegalArgumentException 예외가 발생합니다.")
+    @DisplayName("존재하지 않는 URL 조회 시, UrlNotFoundException 예외가 발생합니다.")
     @Test
-    void givenInvalidUrl_whenGetOriginalUrl_thenThrowIllegalArgumentException() {
+    void givenInvalidUrl_whenGetOriginalUrl_thenThrowUrlNotFoundException() {
         // given
-        final String invalidUrl = "Invalid Url";
+        final String invalidUrl = "URL001";
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> urlService.getOriginalUrl(invalidUrl));
+        assertThrows(UrlNotFoundException.class, () -> urlService.getOriginalUrl(invalidUrl));
     }
 
     @DisplayName("만료된 URL 조회 시, IllegalStateException 예외가 발생합니다.")

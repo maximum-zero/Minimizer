@@ -5,7 +5,9 @@ import org.maximum0.minimizer.common.common.Base62Encoder;
 import org.maximum0.minimizer.url.application.ports.SequenceRepository;
 import org.maximum0.minimizer.url.application.interfaces.ShortKeyGenerator;
 import org.maximum0.minimizer.url.domain.ShortKey;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class DbSequenceShortKeyGenerator implements ShortKeyGenerator {
     private final SequenceRepository sequenceRepository;

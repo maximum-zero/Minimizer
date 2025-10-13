@@ -7,7 +7,10 @@ import org.maximum0.minimizer.url.application.interfaces.ShortKeyGenerator;
 import org.maximum0.minimizer.url.application.ports.UrlMappingRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
+import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class UrlService {
     private final ShortKeyGenerator shortKeyGenerator;
@@ -41,7 +44,7 @@ public class UrlService {
     public String getOriginalUrl(String shortKeyStr) {
         ShortKey shortKey = ShortKey.createShortKey(shortKeyStr);
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findByShortKey(shortKey);
-        UrlMapping urlMapping = optionalUrlMapping.orElseThrow(() -> new IllegalArgumentException(shortKeyStr + "의 단축 URL을 찾을 수 없습니다."));
+        UrlMapping urlMapping = optionalUrlMapping.orElseThrow(() -> new UrlNotFoundException(shortKey));
         if (urlMapping.isExpired()) {
             throw new IllegalStateException("단축 URL이 만료되었습니다.");
         }
