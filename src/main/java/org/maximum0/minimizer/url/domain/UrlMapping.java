@@ -10,6 +10,7 @@ public class UrlMapping {
     private final ShortKey shortKey;
     private final Url originalUrl;
     private final PositiveCounter clickCount;
+    @Getter
     private final Instant expiresAt;
 
     public static UrlMapping createUrlMapping(ShortKey shortKey, String originalUrl, Instant expiresAt) {
@@ -37,6 +38,17 @@ public class UrlMapping {
      */
     public void increaseClickCount() {
         this.clickCount.increase();
+    }
+
+    /**
+     * 단축 URL이 만료되었는지 확인합니다.
+     * @return 만료시 true, 아니면 false
+     */
+    public boolean isExpired() {
+        if (this.expiresAt == null) {
+            return false;
+        }
+        return this.expiresAt.isBefore(Instant.now());
     }
 
     public String getShortKey() {
