@@ -1,4 +1,4 @@
-package org.maximum0.minimizer.common.common;
+package org.maximum0.minimizer.common.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
