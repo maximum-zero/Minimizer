@@ -44,11 +44,11 @@ public class UrlMapping {
      * 단축 URL이 만료되었는지 확인합니다.
      * @return 만료시 true, 아니면 false
      */
-    public boolean isExpired() {
+    public boolean isExpired(Instant now) {
         if (this.expiresAt == null) {
             return false;
         }
-        return this.expiresAt.isBefore(Instant.now());
+        return this.expiresAt.isBefore(now);
     }
 
     public String getShortKey() {

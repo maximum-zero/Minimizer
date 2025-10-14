@@ -1,5 +1,6 @@
 package org.maximum0.minimizer.url.application;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UrlService {
     private final ShortKeyGenerator shortKeyGenerator;
     private final UrlMappingRepository urlMappingRepository;
+    private final Clock clock;
 
     /**
      * 단축 URL의 기본 만료 기간
@@ -28,7 +30,7 @@ public class UrlService {
      */
     public UrlMapping createShortenUrl(String url) {
         ShortKey shortKey = shortKeyGenerator.generate();
-        Instant expireAt = Instant.now().plusSeconds(EXPIRE_AT);
+        Instant expireAt = Instant.now(clock).plusSeconds(EXPIRE_AT);
         UrlMapping urlMapping = UrlMapping.createUrlMapping(shortKey, url, expireAt);
         return urlMappingRepository.save(urlMapping);
     }
@@ -45,7 +47,7 @@ public class UrlService {
         ShortKey shortKey = ShortKey.createShortKey(shortKeyStr);
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findByShortKey(shortKey);
         UrlMapping urlMapping = optionalUrlMapping.orElseThrow(() -> new UrlNotFoundException(shortKey));
-        if (urlMapping.isExpired()) {
+        if (urlMapping.isExpired(Instant.now(clock))) {
             throw new IllegalStateException("단축 URL이 만료되었습니다.");
         }
 

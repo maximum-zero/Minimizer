@@ -1,12 +1,19 @@
 package org.maximum0.minimizer.url.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.maximum0.minimizer.testing.FakeObjectFactory;
+import org.maximum0.minimizer.testing.TestClockProvider;
+import org.maximum0.minimizer.url.application.fake.FakeSequenceRepository;
+import org.maximum0.minimizer.url.application.fake.FakeUrlMappingRepository;
+import org.maximum0.minimizer.url.application.ports.SequenceRepository;
 import org.maximum0.minimizer.url.application.ports.UrlMappingRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
@@ -14,10 +21,21 @@ import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
 
 @DisplayName("Url 서비스 로직")
 class UrlServiceTest {
-    private final UrlService urlService = FakeObjectFactory.getUrlService();
-    private final UrlMappingRepository urlMappingRepository = FakeObjectFactory.getUrlMappingRepository();
+    private final TestClockProvider clockProvider = new TestClockProvider(); // Clock 조작을 위해 필드화
+    private final SequenceRepository sequenceRepository = new FakeSequenceRepository(0);
+    private final UrlMappingRepository urlMappingRepository = new FakeUrlMappingRepository();
+    private final DbSequenceShortKeyGenerator sequenceGenerator = new DbSequenceShortKeyGenerator(sequenceRepository);
 
+    private UrlService urlService;
     private final String ORIGINAL_URL = "https://www.google.com";
+    private Instant fixedTestTime;
+
+    @BeforeEach
+    void setUp() {
+        fixedTestTime = Instant.now();
+        clockProvider.setFixedTime(fixedTestTime);
+        urlService = new UrlService(sequenceGenerator, urlMappingRepository, clockProvider.getClock());
+    }
 
     @DisplayName("유효한 URL로 Shorten URL 생성 후 반환된 객체가 정확한지 확인합니다.")
     @Test
@@ -29,7 +47,7 @@ class UrlServiceTest {
         assertNotNull(result.getId());
         assertEquals("000001", result.getShortKey());
         assertEquals(ORIGINAL_URL, result.getOriginalUrl());
-        assertTrue(result.getExpiresAt().isAfter(Instant.now().plus(9, ChronoUnit.DAYS)));
+        assertTrue(result.getExpiresAt().isAfter(fixedTestTime.plus(9, ChronoUnit.DAYS)));
     }
 
     @DisplayName("정상적으로 Shorten URL를 생성 후, 조회시 정상적으로 URL을 반환하고, 클릭수가 증가합니다.")
@@ -75,7 +93,7 @@ class UrlServiceTest {
                 9999L,
                 EXPIRED_SHORT_KEY,
                 ORIGINAL_URL,
-                Instant.now().minus(1, ChronoUnit.HOURS),
+                fixedTestTime.minus(1, ChronoUnit.HOURS),
                 0L
         );
         urlMappingRepository.save(expiredMapping);
