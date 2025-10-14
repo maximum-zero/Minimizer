@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.maximum0.minimizer.testing.FakeObjectFactory;
+import org.maximum0.minimizer.url.application.fake.FakeSequenceRepository;
+import org.maximum0.minimizer.url.application.ports.SequenceRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 
 @DisplayName("DB Sequence 기반 ShortKeyGenerator")
@@ -16,7 +17,8 @@ class DbSequenceShortKeyGeneratorTest {
     void givenInitialId_whenGenerateMultipleTimes_thenReturnIncrementedShortKey() {
         // given
         final long CURRENT_ID = 1000L;
-        DbSequenceShortKeyGenerator generator = FakeObjectFactory.createDbSequenceShortKeyGenerator(CURRENT_ID);
+        SequenceRepository sequenceRepository = new FakeSequenceRepository(CURRENT_ID);
+        DbSequenceShortKeyGenerator generator = new DbSequenceShortKeyGenerator(sequenceRepository);
 
         // when & then
         // ID 1001L - 0000G9
@@ -39,7 +41,8 @@ class DbSequenceShortKeyGeneratorTest {
     void givenIdExceedingShortKeyLength_whenGenerate_thenThrowIllegalArgumentException() {
         // given
         long valueExceedingSixDigits = 56800235584L;
-        DbSequenceShortKeyGenerator generator = FakeObjectFactory.createDbSequenceShortKeyGenerator(valueExceedingSixDigits);
+        SequenceRepository sequenceRepository = new FakeSequenceRepository(valueExceedingSixDigits);
+        DbSequenceShortKeyGenerator generator = new DbSequenceShortKeyGenerator(sequenceRepository);
 
         // when & then
         assertThrows(IllegalArgumentException.class, generator::generate);
