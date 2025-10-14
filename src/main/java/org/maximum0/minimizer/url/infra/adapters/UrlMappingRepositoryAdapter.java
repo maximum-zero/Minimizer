@@ -7,7 +7,9 @@ import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
 import org.maximum0.minimizer.url.infra.entities.UrlMappingEntity;
 import org.maximum0.minimizer.url.infra.jpa.UrlMappingJpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @RequiredArgsConstructor
 public class UrlMappingRepositoryAdapter implements UrlMappingRepository {
     private final UrlMappingJpaRepository urlMappingJpaRepository;
