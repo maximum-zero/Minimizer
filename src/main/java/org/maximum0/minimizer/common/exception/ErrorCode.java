@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     BAD_REQUEST(4000, HttpStatus.BAD_REQUEST, "잘못된 요청 형식입니다."),
     URL_NOT_FOUND(4004, HttpStatus.NOT_FOUND, "단축 URL을 찾을 수 없습니다."),
-    URL_EXPIRED(4005, HttpStatus.BAD_REQUEST, "단축 URL이 만료되었습니다."),
+    URL_EXPIRED(4005, HttpStatus.GONE, "단축 URL이 만료되었습니다."),
     INVALID_FORMAT(4006, HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다."),
 
     INTERNAL_SERVER_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");

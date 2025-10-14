@@ -8,6 +8,7 @@ import org.maximum0.minimizer.url.application.interfaces.ShortKeyGenerator;
 import org.maximum0.minimizer.url.application.ports.UrlMappingRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
+import org.maximum0.minimizer.url.domain.exception.UrlAccessExpiredException;
 import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class UrlService {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findByShortKey(shortKey);
         UrlMapping urlMapping = optionalUrlMapping.orElseThrow(() -> new UrlNotFoundException(shortKey));
         if (urlMapping.isExpired(Instant.now(clock))) {
-            throw new IllegalStateException("단축 URL이 만료되었습니다.");
+            throw new UrlAccessExpiredException(shortKey);
         }
 
         urlMapping.increaseClickCount();

@@ -1,8 +1,5 @@
 package org.maximum0.minimizer.url.application.ports;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
 public interface SequenceRepository {
 
     /**

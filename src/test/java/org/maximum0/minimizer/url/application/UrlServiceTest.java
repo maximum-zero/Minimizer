@@ -17,6 +17,7 @@ import org.maximum0.minimizer.url.application.ports.SequenceRepository;
 import org.maximum0.minimizer.url.application.ports.UrlMappingRepository;
 import org.maximum0.minimizer.url.domain.ShortKey;
 import org.maximum0.minimizer.url.domain.UrlMapping;
+import org.maximum0.minimizer.url.domain.exception.UrlAccessExpiredException;
 import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
 
 @DisplayName("Url 서비스 로직")
@@ -84,9 +85,9 @@ class UrlServiceTest {
         assertThrows(UrlNotFoundException.class, () -> urlService.getOriginalUrl(invalidUrl));
     }
 
-    @DisplayName("만료된 URL 조회 시, IllegalStateException 예외가 발생합니다.")
+    @DisplayName("만료된 URL 조회 시, UrlAccessExpiredException 예외가 발생합니다.")
     @Test
-    void givenExpired_whenGetOriginalUrl_thenThrowIllegalStateException() {
+    void givenExpired_whenGetOriginalUrl_thenThrowUrlAccessExpiredException() {
         // given
         final String EXPIRED_SHORT_KEY = "EXPIRE";
         UrlMapping expiredMapping = UrlMapping.createUrlMapping(
@@ -99,7 +100,7 @@ class UrlServiceTest {
         urlMappingRepository.save(expiredMapping);
 
         // when & then
-        assertThrows(IllegalStateException.class, () -> urlService.getOriginalUrl(EXPIRED_SHORT_KEY));
+        assertThrows(UrlAccessExpiredException.class, () -> urlService.getOriginalUrl(EXPIRED_SHORT_KEY));
     }
 
 }

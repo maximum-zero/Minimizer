@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.maximum0.minimizer.common.response.Response;
+import org.maximum0.minimizer.url.domain.exception.UrlAccessExpiredException;
 import org.maximum0.minimizer.url.domain.exception.UrlNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
     public <T> ResponseEntity<Response<T>> handleUrlNotFoundException(UrlNotFoundException ex, HttpServletRequest request) {
         log.warn("⚠️ [UrlNotFoundException] {} {} (Params: {}) -> Details: {}", request.getMethod(), request.getRequestURI(), getRequestParams(request), ex.getMessage());
         return Response.fail(ErrorCode.URL_NOT_FOUND);
+    }
+
+    @ExceptionHandler(UrlAccessExpiredException.class)
+    public <T> ResponseEntity<Response<T>> handleUrlAccessExpiredException(UrlAccessExpiredException ex, HttpServletRequest request) {
+        log.warn("⚠️ [UrlAccessExpiredException] {} {} (Params: {}) -> Details: {}", request.getMethod(), request.getRequestURI(), getRequestParams(request), ex.getMessage());
+        return Response.fail(ErrorCode.URL_EXPIRED);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
