@@ -37,3 +37,4 @@ out/
 
 config/.env.local
 config/.env.dev
+config/.env.prod

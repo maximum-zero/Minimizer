@@ -1,0 +1,64 @@
+# ----------------------------------------------------------------------
+# GCP Cloud Build CI/CD Pipeline
+# ----------------------------------------------------------------------
+
+substitutions:
+  _PROJECT_ID: ${PROJECT_ID}
+  _REPO_NAME: ${REPO_NAME}
+  _APP_IP: 34.135.188.108
+  _USERNAME: maximum_zero95
+  _AR_REGION: us-central1
+
+steps:
+  # --------------------------------------------------------------------
+  # Spring Boot 앱 빌드 (Docker 이미지 생성)
+  # --------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/docker'
+    id: BUILD_IMAGE
+    args:
+      - 'build'
+      - '-t'
+      - '${_AR_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/minimizer-app:latest'
+      - '.'
+
+  # --------------------------------------------------------------------
+  # Artifact Registry에 Docker 이미지 Push
+  # --------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/docker'
+    id: PUSH_IMAGE
+    args:
+      - 'push'
+      - '${_AR_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/minimizer-app:latest'
+
+  # --------------------------------------------------------------------
+  # Secret Manager에서 Private Key를 가져와 파일로 저장
+  # --------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: FETCH_SSH_KEY
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        mkdir -p /root/.ssh
+        gcloud secrets versions access latest --secret="minimizer-ssh-key-secret" > /root/.ssh/cloud-build-key
+        chmod 600 /root/.ssh/cloud-build-key
+
+  # --------------------------------------------------------------------
+  # Live VM에 SSH 접속하여 최신 이미지로 배포 및 앱 재시작
+  # --------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/ssh'
+    id: DEPLOY_TO_VM
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        ssh -i ~/.ssh/minimizer-ssh-key -o StrictHostKeyChecking=no ${_USERNAME}@${_APP_IP} << EOF
+          echo "Start Deployment on VM"
+        
+          cd /home/${_USERNAME}/minimizer
+        
+          /usr/local/bin/docker compose --env-file config/.env.prod -f config/docker-compose-prod.yml pull app
+          /usr/local/bin/docker compose --env-file config/.env.prod -f config/docker-compose-prod.yml up -d --force-recreate app
+        
+        EOF
+          echo "Deployment Finished. App is running on port 8085."

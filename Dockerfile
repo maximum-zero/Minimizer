@@ -7,7 +7,7 @@ WORKDIR /app
 
 # 1. 의존성 캐싱 (선택 사항: 빌드 속도 향상)
 # build.gradle, settings.gradle 파일을 복사하고 의존성을 다운로드하여 레이어 캐시를 활용
-COPY build.gradle settings.gradle ./
+COPY build.gradle.kts settings.gradle.kts ./
 RUN gradle dependencies --no-daemon
 
 # 2. 소스 코드 복사 및 빌드
@@ -19,7 +19,7 @@ RUN gradle clean build -x test --no-daemon
 # Stage 2: 러너 (Runner) - JRE만 사용하여 JAR 파일을 실행하는 최종 이미지 단계
 # ----------------------------------------------------------------------------------
 # JRE만 포함된 경량 이미지를 사용하여 최종 이미지 크기를 최소화합니다.
-FROM amazoncorretto:17-jre 
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # ⭐️ 빌더 스테이지에서 생성된 최종 JAR 파일만 복사해 옵니다. ⭐️
