@@ -23,7 +23,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # 파일 경로는 Spring Boot Gradle 플러그인의 기본 출력 경로를 가정합니다.
-COPY --from=builder /app/build/libs/*-SNAPSHOT.jar ./app.jar
+COPY --from=builder /app/build/libs/app.jar ./app.jar
 
 # 컨테이너 시간대를 서울 시간으로 설정 (운영 환경 관리에 유리)
 ENV TZ=Asia/Seoul
